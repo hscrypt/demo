@@ -1,12 +1,23 @@
 {
   "compilerOptions": {
-    "outDir": "./dist/",
-    "noImplicitAny": true,
-    "module": "es6",
-    "sourceMap": true,
+    "outDir": "build/",
+    "declaration": true,
     "target": "es5",
-    "jsx": "react",
-    "allowJs": true,
-    "moduleResolution": "node"
-  }
+    "module": "UMD",
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "lib": ["dom", "es2015", "es2016"],
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "noEmitHelpers": true,
+    "importHelpers": true,
+    "strict": true,
+    "downlevelIteration": true,
+    "noImplicitReturns": true,
+    "esModuleInterop": true,
+  },
+  "exclude": [
+    "node_modules",
+    "build"
+  ]
 }
