@@ -90,11 +90,12 @@ export default class HscryptPlugin {
     protected encrypt(source: string) {
         let { encryptedPath } = this
         encryptedPath = this.config.path ? `${this.config.path}/${encryptedPath}` : encryptedPath
-        const input = this.config.path ? `${this.config.path}/${this.filename}` : this.filename
-        console.log(`Writing source from ${input} to ${encryptedPath}`)
+        // const input = this.config.path ? `${this.config.path}/${this.filename}` : this.filename
+        console.log(`Writing source from ${this.filename} to ${encryptedPath}`)
         fs.writeFileSync(encryptedPath, source)
-        console.log(`Removing ${input}`)
-        fs.unlinkSync(input)
+        // console.log(`Removing ${input} (exists: ${fs.existsSync(input)})`)
+        // fs.unlinkSync(input)
+        // console.log(`${input} exists? ${fs.existsSync(input)}`)
     }
 
     protected prepare({ assets }: Compilation) {
@@ -104,6 +105,7 @@ export default class HscryptPlugin {
                 const source = assets[filename].source()
                 this.scriptCache[filename] = source
                 this.encrypt(source)
+                delete assets[filename]
             }
         })
     }
