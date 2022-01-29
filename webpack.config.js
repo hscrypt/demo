@@ -1,6 +1,8 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-var HelloWorldPlugin = require('demo/webpack-plugin');
+var HscryptPlugin = require('webpack-plugin').default;
+console.log(HscryptPlugin)
 
 module.exports = {
     entry: './src/index.ts',
@@ -18,14 +20,22 @@ module.exports = {
         extensions: [ '.ts', '.js', ],
     },
     plugins: [
-        new HelloWorldPlugin({ options: true, }),
+        new HtmlWebpackPlugin({
+            inject: false,
+            template: 'index.html',
+        }),
+        new HscryptPlugin({
+            filename: 'demo.bundle.js',
+            path: 'dist',
+            hscrypt: '../../js/dist/hscrypt.bundle.js',
+        }),
     ],
     output: {
         filename: 'demo.bundle.js',
         path: path.resolve(__dirname, 'dist'),
         // libraryTarget: 'var',
         // library: 'foo',
-        clean: true,
+        // clean: true,
     },
     // optimization: {
     //     runtimeChunk: 'single',

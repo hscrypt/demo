@@ -2,19 +2,21 @@ import { escapeRegExp } from 'lodash'
 import { SyncHook } from 'tapable'
 import { Compiler } from 'webpack'
 import HTMLWebpackPlugin = require("html-webpack-plugin")
+import * as fs from "fs";
+import cheerio = require('cheerio');
 
 export function is(filenameExtension: string) {
     const reg = new RegExp(`\.${filenameExtension}$`)
     return (fileName: string) => reg.test(fileName)
 }
 
-export const isCSS = is('css')
+export const isJS = is('js')
 
 interface BeforeAssetTagGenerationData {
     outputName: string
     assets: {
         publicPath: string
-        css: string[]
+        js: string[]
     }
     plugin: HTMLWebpackPlugin
 }
@@ -30,7 +32,7 @@ interface HTMLWebpackPluginHooks {
     beforeEmit: SyncHook<BeforeEmitData>
 }
 
-type CSSStyle = string
+type Script = string
 
 export interface ReplaceConfig {
     position?: 'before' | 'after'
@@ -38,17 +40,19 @@ export interface ReplaceConfig {
     target: string
 }
 
-export type StyleTagFactory = (params: { style: string }) => string
+// export type ScriptTagFactory = (params: { script: string }) => string
 
 export const DEFAULT_REPLACE_CONFIG: ReplaceConfig = {
     target: '</head>',
 }
 
 export interface Config {
-    filter?(fileName: string): boolean
-    leaveCSSFile?: boolean
+    filename: string,
+    hscrypt: string,
+    path?: string
+    // filter?(fileName: string): boolean
     replace?: ReplaceConfig
-    styleTagFactory?: StyleTagFactory
+    // scriptTagFactory?: ScriptTagFactory
 }
 
 export interface FileCache {
@@ -64,152 +68,173 @@ interface Compilation {
     assets: { [key: string]: Asset }
 }
 
-export class HscryptPlugin {
+export default class HscryptPlugin {
     // Using object reference to distinguish styles for multiple files
-    private cssStyleMap: Map<HTMLWebpackPlugin, CSSStyle[]> = new Map()
-    protected cssStyleCache: FileCache = {}
+    private scriptMap: Map<HTMLWebpackPlugin, Script[]> = new Map()
+    protected scriptCache: FileCache = {}
 
-    constructor(protected readonly config: Config = {}) {}
+    constructor(protected readonly config: Config) {}
+
+    protected get filename() {
+        return this.config.filename
+    }
 
     protected get replaceConfig() {
         return this.config.replace || DEFAULT_REPLACE_CONFIG
     }
 
-    protected get styleTagFactory(): StyleTagFactory {
-        return (
-            this.config.styleTagFactory ||
-            (({ style }) => `<style type="text/css">${style}</style>`)
-        )
+    protected get encryptedPath(): string {
+        return `${this.filename}.gpg`
+    }
+
+    protected encrypt(source: string) {
+        let { encryptedPath } = this
+        encryptedPath = this.config.path ? `${this.config.path}/${encryptedPath}` : encryptedPath
+        const input = this.config.path ? `${this.config.path}/${this.filename}` : this.filename
+        console.log(`Writing source from ${input} to ${encryptedPath}`)
+        fs.writeFileSync(encryptedPath, source)
+        console.log(`Removing ${input}`)
+        fs.unlinkSync(input)
     }
 
     protected prepare({ assets }: Compilation) {
-        Object.keys(assets).forEach((fileName) => {
-            if (isCSS(fileName) && this.isCurrentFileNeedsToBeInlined(fileName)) {
-                this.cssStyleCache[fileName] = assets[fileName].source()
-
-                if (!this.config.leaveCSSFile) {
-                    delete assets[fileName]
-                }
+        Object.keys(assets).forEach(filename => {
+            console.log(`checking js asset: ${filename}`)
+            if (isJS(filename) && this.shouldReplace(filename)) {
+                const source = assets[filename].source()
+                this.scriptCache[filename] = source
+                this.encrypt(source)
             }
         })
     }
 
-    protected getCSSStyle(
+    protected getScript(
         {
-            cssLink,
+            script,
             publicPath,
         }: {
-            cssLink: string
+            script: string
             publicPath: string
         }
     ): string | undefined {
+        console.log(`getScript(${script}, ${publicPath})`)
         // Link pattern: publicPath + fileName + '?' + hash
-        const fileName = cssLink
+        const fileName = script
             .replace(new RegExp(`^${escapeRegExp(publicPath)}`), '')
             .replace(/\?.+$/g, '')
 
-        if (this.isCurrentFileNeedsToBeInlined(fileName)) {
-            const style = this.cssStyleCache[fileName]
+        if (!this.shouldReplace(fileName)) return
 
-            if (style === undefined) {
-                console.error(
-                    `Can not get css style for ${cssLink}. It may be a bug of html-inline-css-webpack-plugin.`,
-                )
-            }
+        const source = this.scriptCache[fileName]
 
-            return style
-        } else {
-            return undefined
+        if (source === undefined) {
+            console.error(
+                `Can't find script matching ${source}. This may indicate a bug in hscrypt-webpack-plugin`,
+            )
         }
+
+        return source
     }
 
-    protected isCurrentFileNeedsToBeInlined(fileName: string): boolean {
-        if (typeof this.config.filter === 'function') {
-            return this.config.filter(fileName)
-        } else {
-            return true
-        }
+    protected shouldReplace(filename: string): boolean {
+        return this.filename == filename
     }
 
-    protected addStyle(
+    protected addScript(
         {
             html,
             htmlFileName,
-            style,
+            // script,
         }: {
             html: string
             htmlFileName: string
-            style: string
+            // script: string
         }
     ) {
+        const hscryptTag = `<script type="module" src="${this.config.hscrypt}"></script>`
+        const injectTag = `<script type="module">window.onload = () => hscrypt.inject('${this.encryptedPath}')</script>`
         const replaceValues = [
-            this.styleTagFactory({ style }),
+            hscryptTag,
+            injectTag,
             this.replaceConfig.target,
         ]
 
-        if (this.replaceConfig.position === 'after') {
-            replaceValues.reverse()
-        }
+        // if (this.replaceConfig.position === 'after') {
+        //     replaceValues.reverse()
+        // }
 
         if (html.indexOf(this.replaceConfig.target) === -1) {
             throw new Error(
-                `Can not inject css style into "${htmlFileName}", as there is not replace target "${this.replaceConfig.target}"`,
+                `Can't inject script ${this.filename} into "${htmlFileName}", didn't find replace target "${this.replaceConfig.target}"`,
             )
         }
 
         return html.replace(this.replaceConfig.target, replaceValues.join(''))
     }
 
-    private prepareCSSStyle(data: BeforeAssetTagGenerationData) {
-        // `prepareCSSStyle` may be called more than once in webpack watch mode.
+    private prepareScript(data: BeforeAssetTagGenerationData) {
+        // `prepareScript` may be called more than once in webpack watch mode.
         // https://github.com/Runjuu/html-inline-css-webpack-plugin/issues/30
         // https://github.com/Runjuu/html-inline-css-webpack-plugin/issues/13
-        this.cssStyleMap.clear()
+        this.scriptMap.clear()
 
-        const [...cssAssets] = data.assets.css
-        cssAssets.forEach((cssLink) => {
-            if (this.isCurrentFileNeedsToBeInlined(cssLink)) {
-                const style = this.getCSSStyle({
-                    cssLink,
-                    publicPath: data.assets.publicPath,
-                })
+        const scripts = data.assets.js
+        console.log("scripts:", scripts)
+        scripts.forEach(script => {
+            if (!this.shouldReplace(script)) return
+            console.log(`Loaded source for script ${script}`)
+            const source = this.getScript({
+                script,
+                publicPath: data.assets.publicPath,
+            })
 
-                if (style) {
-                    if (this.cssStyleMap.has(data.plugin)) {
-                        this.cssStyleMap.get(data.plugin)!.push(style)
-                    } else {
-                        this.cssStyleMap.set(data.plugin, [style])
-                    }
-                    const cssLinkIndex = data.assets.css.indexOf(cssLink)
-                    // prevent generate <link /> tag
-                    if (cssLinkIndex !== -1) {
-                        data.assets.css.splice(cssLinkIndex, 1)
-                    }
+            if (source) {
+                if (this.scriptMap.has(data.plugin)) {
+                    this.scriptMap.get(data.plugin)!.push(source)
+                } else {
+                    this.scriptMap.set(data.plugin, [source])
+                }
+                const scriptIdx = data.assets.js.indexOf(source)
+                // prevent generate <link /> tag
+                if (scriptIdx !== -1) {
+                    data.assets.js.splice(scriptIdx, 1)
                 }
             }
         })
     }
 
-    protected cleanUp(html: string) {
-        return this.replaceConfig.removeTarget
-            ? html.replace(this.replaceConfig.target, '')
-            : html
-    }
+    // protected cleanUp(html: string) {
+    //     return this.replaceConfig.removeTarget
+    //         ? html.replace(this.replaceConfig.target, '')
+    //         : html
+    // }
 
     private process(data: BeforeEmitData) {
         // check if current html needs to be inlined
-        if (this.isCurrentFileNeedsToBeInlined(data.outputName)) {
-            const cssStyles = this.cssStyleMap.get(data.plugin) || []
+        console.log("process:", data)
+        if (data.outputName == 'index.html') {
+            const sources = this.scriptMap.get(data.plugin) || []
 
-            cssStyles.forEach((style) => {
-                data.html = this.addStyle({
-                    style,
+            sources.forEach(source => {
+                // TODO: script unused
+                console.log(`process script; html before:\n${data.html}`)
+                data.html = this.addScript({
+                    // script,
                     html: data.html,
                     htmlFileName: data.outputName,
                 })
+                console.log(`process script; html after:\n${data.html}`)
             })
 
-            data.html = this.cleanUp(data.html)
+            // const $ = cheerio.load(data.html);
+            // const selector = `script[src=${this.filename}]`
+            // const selection = $(selector)
+            // console.log(`cheerio selection (${selector}):`, selection)
+            // selection.remove()
+            // data.html = $.html()
+
+            // data.html = this.cleanUp(data.html)
+            // console.log(`process script; html after cleanup (${this.replaceConfig.target}):\n${data.html}`)
         }
     }
 
@@ -225,7 +250,7 @@ export class HscryptPlugin {
                     `hscrypt_beforeAssetTagGeneration`,
                     (data) => {
                         this.prepare(compilation)
-                        this.prepareCSSStyle(data)
+                        this.prepareScript(data)
                     },
                 )
 
@@ -233,6 +258,13 @@ export class HscryptPlugin {
                     this.process(data)
                 })
             },
+        )
+
+        compiler.hooks.done.tap(
+            'hscrypt_rm_script',
+            (stats) => {
+                console.log("stats:",stats)
+            }
         )
     }
 }
