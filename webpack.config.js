@@ -1,7 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-var HscryptPlugin = require('webpack-plugin').default;
+var HscryptPlugin = require('../webpack-plugin/dist/webpack-plugin').default;
 console.log(HscryptPlugin)
 
 module.exports = {
