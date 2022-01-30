@@ -1,7 +1,9 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HTMLWebpackPlugin = require('html-webpack-plugin');
+console.log(HTMLWebpackPlugin)
+// import HtmlWebpackPlugin from 'html-webpack-plugin';
 
-var HscryptPlugin = require('../webpack-plugin/dist/webpack-plugin').default;
+var HscryptPlugin = require('hscrypt-webpack-plugin').default;
 console.log(HscryptPlugin)
 
 module.exports = {
@@ -20,14 +22,16 @@ module.exports = {
         extensions: [ '.ts', '.js', ],
     },
     plugins: [
-        new HtmlWebpackPlugin({
+        new HTMLWebpackPlugin({
             inject: false,
             template: 'index.html',
         }),
         new HscryptPlugin({
+            // HTMLWebpackPlugin,
             filename: 'demo.bundle.js',
             path: 'dist',
             hscrypt: '../../js/dist/hscrypt.bundle.js',
+            debug: true,
         }),
     ],
     output: {
