@@ -2,7 +2,7 @@
   "name": "hscrypt-demo",
   "dependencies": {
     "lodash": "^4.17.15",
-    "tslib": "^1.9.3"
+    "tslib": "^2.3.1"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.178",

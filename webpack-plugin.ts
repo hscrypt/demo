@@ -50,6 +50,7 @@ export interface Config {
     filename: string,
     hscrypt: string,
     path?: string
+    debug?: boolean
     // filter?(fileName: string): boolean
     replace?: ReplaceConfig
     // scriptTagFactory?: ScriptTagFactory
@@ -75,6 +76,12 @@ export default class HscryptPlugin {
 
     constructor(protected readonly config: Config) {}
 
+    protected log(...args: any[]) {
+        if (this.config.debug) {
+            console.log(...args)
+        }
+    }
+
     protected get filename() {
         return this.config.filename
     }
@@ -90,17 +97,13 @@ export default class HscryptPlugin {
     protected encrypt(source: string) {
         let { encryptedPath } = this
         encryptedPath = this.config.path ? `${this.config.path}/${encryptedPath}` : encryptedPath
-        // const input = this.config.path ? `${this.config.path}/${this.filename}` : this.filename
-        console.log(`Writing source from ${this.filename} to ${encryptedPath}`)
+        this.log(`Writing source from ${this.filename} to ${encryptedPath}`)
         fs.writeFileSync(encryptedPath, source)
-        // console.log(`Removing ${input} (exists: ${fs.existsSync(input)})`)
-        // fs.unlinkSync(input)
-        // console.log(`${input} exists? ${fs.existsSync(input)}`)
     }
 
     protected prepare({ assets }: Compilation) {
         Object.keys(assets).forEach(filename => {
-            console.log(`checking js asset: ${filename}`)
+            this.log(`checking js asset: ${filename}`)
             if (isJS(filename) && this.shouldReplace(filename)) {
                 const source = assets[filename].source()
                 this.scriptCache[filename] = source
@@ -119,15 +122,15 @@ export default class HscryptPlugin {
             publicPath: string
         }
     ): string | undefined {
-        console.log(`getScript(${script}, ${publicPath})`)
+        this.log(`getScript(${script}, ${publicPath})`)
         // Link pattern: publicPath + fileName + '?' + hash
-        const fileName = script
+        const filename = script
             .replace(new RegExp(`^${escapeRegExp(publicPath)}`), '')
             .replace(/\?.+$/g, '')
 
-        if (!this.shouldReplace(fileName)) return
+        if (!this.shouldReplace(filename)) return
 
-        const source = this.scriptCache[fileName]
+        const source = this.scriptCache[filename]
 
         if (source === undefined) {
             console.error(
@@ -146,11 +149,9 @@ export default class HscryptPlugin {
         {
             html,
             htmlFileName,
-            // script,
         }: {
             html: string
             htmlFileName: string
-            // script: string
         }
     ) {
         const hscryptTag = `<script type="module" src="${this.config.hscrypt}"></script>`
@@ -160,10 +161,6 @@ export default class HscryptPlugin {
             injectTag,
             this.replaceConfig.target,
         ]
-
-        // if (this.replaceConfig.position === 'after') {
-        //     replaceValues.reverse()
-        // }
 
         if (html.indexOf(this.replaceConfig.target) === -1) {
             throw new Error(
@@ -181,10 +178,10 @@ export default class HscryptPlugin {
         this.scriptMap.clear()
 
         const scripts = data.assets.js
-        console.log("scripts:", scripts)
+        this.log("scripts:", scripts)
         scripts.forEach(script => {
             if (!this.shouldReplace(script)) return
-            console.log(`Loaded source for script ${script}`)
+            this.log(`Loaded source for script ${script}`)
             const source = this.getScript({
                 script,
                 publicPath: data.assets.publicPath,
@@ -197,7 +194,7 @@ export default class HscryptPlugin {
                     this.scriptMap.set(data.plugin, [source])
                 }
                 const scriptIdx = data.assets.js.indexOf(source)
-                // prevent generate <link /> tag
+                // prevent generate <script /> tag
                 if (scriptIdx !== -1) {
                     data.assets.js.splice(scriptIdx, 1)
                 }
@@ -205,38 +202,21 @@ export default class HscryptPlugin {
         })
     }
 
-    // protected cleanUp(html: string) {
-    //     return this.replaceConfig.removeTarget
-    //         ? html.replace(this.replaceConfig.target, '')
-    //         : html
-    // }
-
     private process(data: BeforeEmitData) {
         // check if current html needs to be inlined
-        console.log("process:", data)
+        this.log("process:", data)
         if (data.outputName == 'index.html') {
             const sources = this.scriptMap.get(data.plugin) || []
 
             sources.forEach(source => {
                 // TODO: script unused
-                console.log(`process script; html before:\n${data.html}`)
+                this.log(`process script; html before:\n${data.html}`)
                 data.html = this.addScript({
-                    // script,
                     html: data.html,
                     htmlFileName: data.outputName,
                 })
-                console.log(`process script; html after:\n${data.html}`)
+                this.log(`process script; html after:\n${data.html}`)
             })
-
-            // const $ = cheerio.load(data.html);
-            // const selector = `script[src=${this.filename}]`
-            // const selection = $(selector)
-            // console.log(`cheerio selection (${selector}):`, selection)
-            // selection.remove()
-            // data.html = $.html()
-
-            // data.html = this.cleanUp(data.html)
-            // console.log(`process script; html after cleanup (${this.replaceConfig.target}):\n${data.html}`)
         }
     }
 
@@ -262,11 +242,13 @@ export default class HscryptPlugin {
             },
         )
 
-        compiler.hooks.done.tap(
-            'hscrypt_rm_script',
-            (stats) => {
-                console.log("stats:",stats)
-            }
-        )
+        if (this.config.debug) {
+            compiler.hooks.done.tap(
+                'hscrypt_rm_script',
+                (stats) => {
+                    this.log("stats:", stats)
+                }
+            )
+        }
     }
 }
