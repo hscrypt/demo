@@ -24,13 +24,14 @@ module.exports = {
         }),
         new HscryptPlugin({
             filename: 'demo.bundle.js',
+            pswd: 'my-password',
             path: 'dist',
-            hscrypt: '../../js/dist/hscrypt.bundle.js',
-            debug: true,
+            hscrypt: '../../js/build/src/hscrypt.js',
+            // debug: true,
         }),
     ],
     output: {
         filename: 'demo.bundle.js',
         path: path.resolve(__dirname, 'dist'),
-    },
+    }
 };

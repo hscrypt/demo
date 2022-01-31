@@ -6,7 +6,8 @@
   },
   "devDependencies": {
     "@babel/plugin-transform-modules-amd": "^7.16.7",
-    "hscrypt-webpack-plugin": "0.0.1",
+    "hscrypt": "file:../js/hscrypt-0.0.1.tgz",
+    "hscrypt-webpack-plugin": "file:../webpack-plugin/hscrypt-webpack-plugin-0.0.2.tgz",
     "html-webpack-plugin": "^4.0.0",
     "mini-css-extract-plugin": "^2.5.3",
     "ts-loader": "~8.2.0",
