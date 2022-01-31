@@ -1,9 +1,10 @@
 const path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
-// import HscryptPlugin from 'hscrypt-webpack-plugin'
-const HscryptPlugin = require('hscrypt-webpack-plugin').default;
+import HscryptPlugin from 'hscrypt-webpack-plugin'
+// const HscryptPlugin = require('hscrypt-webpack-plugin').default;
+import webpack from "webpack"
 
-module.exports = {
+const config: webpack.Configuration = {
     entry: './src/index.ts',
     devtool: 'inline-source-map',
     module: {
@@ -36,3 +37,5 @@ module.exports = {
         path: path.resolve(__dirname, 'dist'),
     }
 };
+
+export default config;
