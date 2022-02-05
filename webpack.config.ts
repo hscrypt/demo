@@ -10,7 +10,7 @@ const hscryptPlugin = new HscryptPlugin({
     path: 'dist',
     //hscrypt: '../../js/build/src/hscrypt.js',
     debug: true,
-    iterations: 5000,
+    // iterations: 5000,
 })
 
 const tagsPlugin = new HtmlWebpackTagsPlugin({
