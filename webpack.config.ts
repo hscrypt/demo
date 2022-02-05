@@ -9,15 +9,15 @@ const hscryptPlugin = new HscryptPlugin({
     pswd: 'my-password',
     path: 'dist',
     //hscrypt: '../../js/build/src/hscrypt.js',
-    debug: true,
+    //debug: true,
     // iterations: 5000,
 })
 
 const tagsPlugin = new HtmlWebpackTagsPlugin({
     scripts: [
         {
-            path: '../hscrypt.js',
-            // attributes: { rel: 'icon', type: 'image/x-icon', }
+            path: '../node_modules/hscrypt/dist/src/hscrypt.mjs',
+            //attributes: { type: "module" }
         },
     ],
     links: [
