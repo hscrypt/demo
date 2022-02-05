@@ -7,7 +7,7 @@
   "devDependencies": {
     "@types/node": "^17.0.13",
     "@types/webpack": "^5.28.0",
-    "hscrypt-webpack-plugin": "file:../webpack-plugin/hscrypt-webpack-plugin-0.0.2.tgz",
+    "hscrypt-webpack-plugin": "file:../webpack-plugin/hscrypt-webpack-plugin-0.0.2-rc.0.tgz",
     "html-webpack-plugin": "^5.0.0",
     "html-webpack-tags-plugin": "^3.0.2",
     "ts-loader": "~8.2.0",
@@ -18,6 +18,6 @@
     "webpack-dev-server": "^4.7.3"
   },
   "dependencies": {
-    "hscrypt": "file:../js/hscrypt-0.0.1.tgz"
+    "hscrypt": "file:../js/hscrypt-0.0.2-rc.0.tgz"
   }
 }
