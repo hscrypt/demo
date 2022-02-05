@@ -7,7 +7,7 @@
   "devDependencies": {
     "@types/node": "^17.0.13",
     "@types/webpack": "^5.28.0",
-    "hscrypt-webpack-plugin": "^0.0.2-rc.3",
+    "hscrypt-webpack-plugin": "^0.0.2",
     "html-webpack-plugin": "^5.0.0",
     "ts-loader": "~8.2.0",
     "ts-node": "^10.4.0",
