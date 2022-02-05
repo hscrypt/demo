@@ -1,8 +1,32 @@
 const path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 import HscryptPlugin from 'hscrypt-webpack-plugin'
-// const HscryptPlugin = require('hscrypt-webpack-plugin').default;
 import webpack from "webpack"
+const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
+
+const hscryptPlugin = new HscryptPlugin({
+    filename: 'demo.bundle.js',
+    pswd: 'my-password',
+    path: 'dist',
+    //hscrypt: '../../js/build/src/hscrypt.js',
+    debug: true,
+    iterations: 5000,
+})
+
+const tagsPlugin = new HtmlWebpackTagsPlugin({
+    scripts: [
+        {
+            path: '../hscrypt.js',
+            // attributes: { rel: 'icon', type: 'image/x-icon', }
+        },
+    ],
+    links: [
+        {
+            path: '../bootstrap.min.css',
+        }
+    ],
+    append: false,
+})
 
 const config: webpack.Configuration = {
     entry: './src/index.ts',
@@ -21,16 +45,11 @@ const config: webpack.Configuration = {
     },
     plugins: [
         new HTMLWebpackPlugin({
-            inject: false,
+            inject: true,
             template: 'index.html',
         }),
-        new HscryptPlugin({
-            filename: 'demo.bundle.js',
-            pswd: 'my-password',
-            path: 'dist',
-            hscrypt: '../../js/build/src/hscrypt.js',
-            // debug: true,
-        }),
+        tagsPlugin,
+        hscryptPlugin
     ],
     output: {
         filename: 'demo.bundle.js',
