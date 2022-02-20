@@ -1,9 +1,31 @@
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-size: 2vw }
+        h1 { font-size: 3vw }
+    </style>
+    <script>
+        function decrypt() {
+            const pswd = document.getElementById("password")?.value
+            console.log("Decrypt using password:", pswd)
+            hscrypt.decrypt(pswd)
+            return false
+        }
+    </script>
 <script src="hscrypt.mjs"></script>
-	<script>window.onload = () => { var HSCRYPT_CONFIG = { src: 'demo.bundle.js.encrypted', cache: true }; hscrypt.inject(HSCRYPT_CONFIG) }</script>
+	<script>window.onload = () => { window.HSCRYPT_CONFIG = { src: 'demo.bundle.js.encrypted', cacheDecryptionKey: true }; hscrypt.inject(HSCRYPT_CONFIG) }</script>
 	</head>
 <body>
-This page is encrypted.
+<div id="container">
+    <h1>This page is password protected.</h1>
+    <p>
+    <form method="post" action="javascript:void(0);" onsubmit="decrypt()">
+        <input id="password" type="password" placeholder="Enter password" autofocus ></input>
+    </form>
+    <p>Hint: the password for this page is <code>my-password</code> 😉</p>
+    <p>You can also enter it as a "URL hash", e.g. <a href="#my-password"><code>#my-password</code></a>)</p>
+    <p><a target="_blank" href="https://github.com/hscrypt/demo">View source on GitHub</a></p>
+</div>
 </body>
 </html>
