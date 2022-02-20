@@ -1,21 +1,12 @@
-//const hscrypt = window['hscrypt']
-// const { clearCachedDecryptionKey, getCachedDecryptionKey } = (window as any)['hscrypt']
-// import { clearCachedDecryptionKey, getCachedDecryptionKey } from "hscrypt"
-// console.log("imported hscrypt:", clearCachedDecryptionKey, getCachedDecryptionKey)
-
-// import hscrypt from "hscrypt"
-// console.log("imported hscrypt:", hscrypt)
 const hscrypt = require("hscrypt")
-console.log("required hscrypt:", hscrypt)
 
 const container: HTMLDivElement = document.getElementById("container") as any
 
 function setCacheDisplay() {
-    console.log("hscrypt.getCachedDecryptionKey:", hscrypt.getCachedDecryptionKey)
     const secretHex = hscrypt.getCachedDecryptionKey()
     const cacheDisplay = document.getElementById("cache-display")
     if (cacheDisplay) {
-        cacheDisplay.innerHTML = secretHex || ''
+        cacheDisplay.innerHTML = secretHex || '&nbsp;'
     }
 }
 
@@ -31,7 +22,6 @@ function updateButton(disabled: boolean) {
 }
 
 export function clearCache() {
-    console.log("hscrypt.clearCachedDecryptionKey:", hscrypt.clearCachedDecryptionKey)
     hscrypt.clearCachedDecryptionKey()
     setCacheDisplay()
     updateButton(true)
