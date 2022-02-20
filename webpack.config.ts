@@ -7,9 +7,10 @@ const hscryptPlugin = new HscryptPlugin({
     filename: 'demo.bundle.js',
     pswd: 'my-password',
     path: 'dist',
+    // injectHscryptMjs: false,
     //hscryptSrc: '../node_modules/hscrypt/dist/src/hscrypt.mjs',  // local development mode
     debug: true,
-    cache: true,
+    cacheDecryptionKey: true,
     // iterations: 10000,
     // TODO: examples of other config fields
 })

@@ -1,12 +1,18 @@
-let container: HTMLDivElement
-container = document.createElement('div')
-container.setAttribute("class", "container")
+//const hscrypt = window['hscrypt']
+// const { clearCachedDecryptionKey, getCachedDecryptionKey } = (window as any)['hscrypt']
+// import { clearCachedDecryptionKey, getCachedDecryptionKey } from "hscrypt"
+// console.log("imported hscrypt:", clearCachedDecryptionKey, getCachedDecryptionKey)
 
-const path = window.location.pathname
-const LOCALSTORAGE_KEY = `hscrypt.secret:${path}`
+// import hscrypt from "hscrypt"
+// console.log("imported hscrypt:", hscrypt)
+const hscrypt = require("hscrypt")
+console.log("required hscrypt:", hscrypt)
+
+const container: HTMLDivElement = document.getElementById("container") as any
 
 function setCacheDisplay() {
-    const secretHex = localStorage.getItem(LOCALSTORAGE_KEY)
+    console.log("hscrypt.getCachedDecryptionKey:", hscrypt.getCachedDecryptionKey)
+    const secretHex = hscrypt.getCachedDecryptionKey()
     const cacheDisplay = document.getElementById("cache-display")
     if (cacheDisplay) {
         cacheDisplay.innerHTML = secretHex || ''
@@ -25,7 +31,8 @@ function updateButton(disabled: boolean) {
 }
 
 export function clearCache() {
-    localStorage.removeItem(LOCALSTORAGE_KEY)
+    console.log("hscrypt.clearCachedDecryptionKey:", hscrypt.clearCachedDecryptionKey)
+    hscrypt.clearCachedDecryptionKey()
     setCacheDisplay()
     updateButton(true)
 }
@@ -34,7 +41,7 @@ container.innerHTML = `
 <div>
     <p>yayyy <i>this was injected by <a href="https://github.com/hscrypt">hscrypt</a></i></p>
     <div>
-        <p>Cache:</p>
+        <p>Cached decryption key:</p>
         <pre id="cache-display"></pre>
     </div>
     <p>
@@ -53,8 +60,6 @@ container.innerHTML = `
     </p>
 </div>
 `
-
-document.body.appendChild(container)
 
 setCacheDisplay()
 updateButton(false)
