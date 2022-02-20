@@ -7,8 +7,11 @@ const hscryptPlugin = new HscryptPlugin({
     filename: 'demo.bundle.js',
     pswd: 'my-password',
     path: 'dist',
-    // debug: true,
-    // iterations: 5000,
+    //hscryptSrc: '../node_modules/hscrypt/dist/src/hscrypt.mjs',  // local development mode
+    debug: true,
+    cache: true,
+    // iterations: 10000,
+    // TODO: examples of other config fields
 })
 
 const config: webpack.Configuration = {
@@ -31,11 +34,12 @@ const config: webpack.Configuration = {
             inject: true,
             template: 'index.html',
         }),
-        hscryptPlugin
+        hscryptPlugin,
     ],
     output: {
         filename: 'demo.bundle.js',
         path: path.resolve(__dirname, 'dist'),
+        library: 'MyApp',
     }
 };
 
