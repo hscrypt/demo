@@ -48,7 +48,6 @@ export default config;
 ```bash
 npm install webpack
 node_modules/.bin/webpack
-
 ```
 [`hscrypt`]: https://github.com/hscrypt/js
 [`hscrypt-webpack-plugin`]: https://github.com/hscrypt/webpack-plugin

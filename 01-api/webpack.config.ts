@@ -8,7 +8,7 @@ const hscryptPlugin = new HscryptPlugin({
     pswd: 'my-password',
     path: 'dist',
     // injectHscryptMjs: false,
-    //hscryptSrc: '../node_modules/hscrypt/dist/src/hscrypt.mjs',  // local development mode
+    //hscryptSrc: 'node_modules/hscrypt/dist/src/hscrypt.mjs',  // local development mode
     debug: true,
     cacheDecryptionKey: true,
     // iterations: 10000,
