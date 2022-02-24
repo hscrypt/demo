@@ -4,20 +4,9 @@ const HscryptPlugin = require("hscrypt-webpack-plugin").default;
 
 module.exports = {
     entry: "./src/secret.js",
-    output: {
-        path: path.resolve(__dirname, 'dist'),
-        filename: "bundle.js"
-    },
+    output: { path: path.resolve(__dirname, 'dist'), filename: "bundle.js" },
     plugins: [
-        new HTMLWebpackPlugin({
-            inject: true,
-            template: 'index.html',
-        }),
-        new HscryptPlugin({
-            path: "dist",
-            filename: "bundle.js",
-            pswd: "my-password",
-            debug: true,
-        })
+        new HTMLWebpackPlugin({ inject: true, template: 'index.html' }),
+        new HscryptPlugin({ path: "dist", filename: "bundle.js", pswd: "my-password" })
     ]
 }

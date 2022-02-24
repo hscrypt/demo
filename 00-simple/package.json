@@ -1,8 +1,11 @@
 {
   "devDependencies": {
-    "hscrypt-webpack-plugin": "file:../../webpack-plugin/hscrypt-webpack-plugin-0.0.3-rc.2.tgz",
+    "hscrypt-webpack-plugin": "^0.0.3-rc.3",
     "html-webpack-plugin": "^5.0.0",
     "webpack": "^5.0.0",
     "webpack-cli": "^4.9.2"
+  },
+  "dependencies": {
+    "hscrypt": "^0.0.3-rc.5"
   }
 }

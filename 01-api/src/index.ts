@@ -3,10 +3,10 @@ const hscrypt = require("hscrypt")
 const container: HTMLDivElement = document.getElementById("container") as any
 
 function setCacheDisplay() {
-    const secretHex = hscrypt.getCachedDecryptionKey()
+    const decryptionKeyHex = hscrypt.getCachedDecryptionKey()
     const cacheDisplay = document.getElementById("cache-display")
     if (cacheDisplay) {
-        cacheDisplay.innerHTML = secretHex || '&nbsp;'
+        cacheDisplay.innerHTML = decryptionKeyHex || '&nbsp;'
     }
 }
 
