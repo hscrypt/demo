@@ -1,9 +1,11 @@
 <html>
 <head>
+    <title>hscrypt demo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body { font-size: 2vw }
         h1 { font-size: 3vw }
+        pre { background-color: #f2f2f2 }
     </style>
     <script>
         function decrypt() {
@@ -20,9 +22,9 @@
 <div id="container">
     <h1>This page is password protected.</h1>
     <p>
-    <form method="post" action="javascript:void(0);" onsubmit="decrypt()">
-        <input id="password" type="password" placeholder="Enter password" autofocus ></input>
-    </form>
+        <form method="post" action="javascript:void(0);" onsubmit="decrypt()">
+            <input id="password" type="password" placeholder="Enter password" autofocus ></input>
+        </form>
     <p>Hint: the password for this page is <code>my-password</code> 😉</p>
     <p>You can also enter it as a "URL hash", e.g. <a href="#my-password"><code>#my-password</code></a>)</p>
     <p><a target="_blank" href="https://github.com/hscrypt/demo">View source on GitHub</a></p>
