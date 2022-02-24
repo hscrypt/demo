@@ -9,13 +9,13 @@
     <item>
       <title></title>
       <link>https://hscrypt.github.io/demos/</link>
-      <pubDate>Thu, 24 Feb 2022 18:21:01 +0000</pubDate>
+      <pubDate>Thu, 24 Feb 2022 18:25:30 +0000</pubDate>
       
       <guid>https://hscrypt.github.io/demos/</guid>
       <description>hscrypt demos #  Examples using hscrypt and hscrypt-webpack-plugin to encrypt and deploy static sites.
 hscrypt simulates &amp;ldquo;anyone with the link can view&amp;rdquo; permissioning for publicly-hosted static web apps (e.g. on GitHub Pages). Please read the Disclaimer section before using.
-Hello World #  Here&amp;rsquo;s a simple example (taken from 00-simple:
-&amp;lt;!-- index.html --&amp;gt; &amp;lt;html&amp;gt; &amp;lt;body&amp;gt; This page is encrypted! Please provide password as URL hash. &amp;lt;/body&amp;gt; &amp;lt;/html&amp;gt; // secret.js document.</description>
+Hello World #  Here&amp;rsquo;s a simple example (taken from 00-simple; see also 01-api which exercises various client-side hscrypt APIs for interacting with the decryption process and user):
+&amp;lt;!-- index.html --&amp;gt; &amp;lt;html&amp;gt; &amp;lt;body&amp;gt; This page is encrypted!</description>
     </item>
     
   </channel>
