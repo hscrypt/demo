@@ -22,14 +22,22 @@ jobs:
       run: |
         npm install
         npm run dev
-    - name: Copy demos into dist/
+    - name: Setup Hugo
+      uses: peaceiris/actions-hugo@v2
+      with:
+        hugo-version: 'latest'
+    - name: Build Hugo site
       run: |
-        mkdir dist/
-        cp -r 00-simple/dist dist/00-simple
-        cp -r 01-api/dist dist/01-api
-        cp README.md dist/index.md
+        mkdir hugo/content
+        cp -r 00-simple/dist hugo/content/00-simple
+        cp -r 00-simple/images hugo/content/00-simple/
+        cp -r 01-api/dist hugo/content/01-api
+        cd hugo
+        hugo new index.md
+        cat ../README.md >> content/index.md
+        hugo -D
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./dist
+        publish_dir: ./hugo/public

@@ -1,0 +1,4 @@
+baseURL = 'https://hscrypt.github.io/'
+languageCode = 'en-us'
+title = 'hscrypt demos'
+theme = "hugo-book"

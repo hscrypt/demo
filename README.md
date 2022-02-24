@@ -60,7 +60,7 @@ Incorrect password fails to decrypt, triggers an alert:
 
 ![](./00-simple/images/02-decryption-error.png)
 
-## Disclaimer <a id="disclaimer"></a>
+## Disclaimer
 - There is cryptography here and I am not a cryptographer!
 - **Passwords should have ≥60 bits of entropy**; see ["Key Derivation"](#key-derivation).
 - I tried to use various crypto primitives correctly, but you should audit before trusting.
@@ -68,15 +68,15 @@ Incorrect password fails to decrypt, triggers an alert:
 - My intention is to use `hscrypt` to host private data on GitHub Pages "soon", and I will update this note when I do, but I am not currently relying on it "in production."
   - I also intend to publish a honeypot encrypted site and offer a bounty ($20) to anyone that can break it (and explain it to me so that I can fix it 😄). I will also update this when that's live.    
 
-## Crypto(graphy) <a id="cryptography"></a>
+## Crypto(graphy)
 Here's an overview of the cryptographic operations performed by hscrypt; please [tell me][hscrypt/js/issues/new] if you spot any errors or think I'm thinking about something incorrectly.
 
-#### ChaCha20 <a id="chacha20"></a>
+### ChaCha20
 I found and used ChaChas20 after earlier experiments with PGP-encrypted pages (around [gitlab.com/smondet/hscrypt]), where my impression was that PGP-decryption at page load time was painfully slow.  I searched for a faster symmetric cipher, and ChaCha20 seemed to be the best choice.
 
 I ported [thesimj/js-chacha20] to typescript: [hscrypt/ts-chacha20]. I am trusting `js-chacha20`, and have not audited it.
 
-### Encryption <a id="encryption"></a>
+### Encryption
 The encryption path is at [hscrypt/js/src/encrypt.ts]. Given:
 - some Javascript source (e.g. the contents of a Webpack-compiled `bundle.js`; see [hscrypt/webpack-plugin]),
 - a password
@@ -127,7 +127,7 @@ Given inputs:
 - if any errors arose, call a configurable callback
   - by default, check if a cached decryption key was used, and if so, purge it (as evidently the encrypted bundle has changed so that the cached decryption key no longer works)
   
-### Key Derivation <a id="key-derivation"></a>
+### Key Derivation
 hscrypt uses PBKDF2 (provided by [CryptoJS][CryptoJS.PBKDF2]), with SHA512, and [**defaults to 20k iterations**][hscrypt/js/src/utils.ts].
 
 ⚠️ 20,000 iterations of SHA512 means **you should use passwords with ≥60 bits of entropy** (see ["Password strength"](#password-strength) below). ⚠️
@@ -141,7 +141,7 @@ There is a direct tradeoff between "page load time" and "page security" embodied
 - hscrypt's default configuration (20k x SHA512) loads a page in ≈1s on my 2021 Macbook Air.
 - I'd like for pages to not be delayed longer than that when loading, so **it is imperative that you use a strong enough password** so that your page is as secure as you need it to be.
 
-#### ⚠️ 20k may not be enough iterations! You should compensate with strong passwords (or more iterations) ⚠️
+#### ⚠️ 20k may not be enough iterations! You should compensate with strong passwords (or more iterations) ⚠️ <a id="pbkdf2-iterations-warning"></a>
 - [OWASP recommendation: **120k iterations of SHA512**][OWASP Password Cheat Sheet], or 310k iterations of SHA256
 - 1password uses 100k iterations of SHA256, cf. ["1Password Security Design" whitepaper][1password-whitepaper], pg. 19:
   > Your account password and the salt are passed to PBKDF2-HMACSHA256 with 100,000 iterations
