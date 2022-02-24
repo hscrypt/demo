@@ -4,7 +4,7 @@ Examples using [`hscrypt`] and [`hscrypt-webpack-plugin`] to encrypt and deploy 
 `hscrypt` simulates "anyone with the link can view" permissioning for publicly-hosted static web apps (e.g. on GitHub Pages). Please read [the Disclaimer section](#disclaimer) before using.
 
 ## Hello World
-Here's a simple example (taken from [00-simple](./00-simple):
+Here's a simple example (taken from [00-simple](./00-simple); see also [01-api](./01-api) which exercises various client-side hscrypt APIs for interacting with the decryption process and user):
 
 ```html
 <!-- index.html -->
