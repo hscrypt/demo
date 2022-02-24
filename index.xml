@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>hscrypt demos</title>
-    <link>https://hscrypt.github.io/</link>
+    <link>https://hscrypt.github.io/demos/</link>
     <description>Recent content on hscrypt demos</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language><atom:link href="https://hscrypt.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <language>en-us</language><atom:link href="https://hscrypt.github.io/demos/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title></title>
-      <link>https://hscrypt.github.io/</link>
-      <pubDate>Thu, 24 Feb 2022 18:18:56 +0000</pubDate>
+      <link>https://hscrypt.github.io/demos/</link>
+      <pubDate>Thu, 24 Feb 2022 18:21:01 +0000</pubDate>
       
-      <guid>https://hscrypt.github.io/</guid>
+      <guid>https://hscrypt.github.io/demos/</guid>
       <description>hscrypt demos #  Examples using hscrypt and hscrypt-webpack-plugin to encrypt and deploy static sites.
 hscrypt simulates &amp;ldquo;anyone with the link can view&amp;rdquo; permissioning for publicly-hosted static web apps (e.g. on GitHub Pages). Please read the Disclaimer section before using.
 Hello World #  Here&amp;rsquo;s a simple example (taken from 00-simple:

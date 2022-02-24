@@ -1,14 +1,14 @@
 {
   "name": "hscrypt demos",
   "short_name": "hscrypt demos",
-  "start_url": "/",
-  "scope": "/",
+  "start_url": "/demos/",
+  "scope": "/demos/",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
   "icons": [
     {
-      "src": "/favicon.svg",
+      "src": "/demos/favicon.svg",
       "sizes": "512x512"
     }
   ]
