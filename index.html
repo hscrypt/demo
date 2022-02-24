@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="hscrypt demos #  Examples using hscrypt and hscrypt-webpack-plugin to encrypt and deploy static sites.
+hscrypt simulates &ldquo;anyone with the link can view&rdquo; permissioning for publicly-hosted static web apps (e.g. on GitHub Pages). Please read the Disclaimer section before using.
+Hello World #  Here&rsquo;s a simple example (taken from 00-simple:
+&lt;!-- index.html --&gt; &lt;html&gt; &lt;body&gt; This page is encrypted! Please provide password as URL hash. &lt;/body&gt; &lt;/html&gt; // secret.js document.">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="color-scheme" content="light dark"><meta property="og:title" content="" />
+<meta property="og:description" content="hscrypt demos #  Examples using hscrypt and hscrypt-webpack-plugin to encrypt and deploy static sites.
+hscrypt simulates &ldquo;anyone with the link can view&rdquo; permissioning for publicly-hosted static web apps (e.g. on GitHub Pages). Please read the Disclaimer section before using.
+Hello World #  Here&rsquo;s a simple example (taken from 00-simple:
+&lt;!-- index.html --&gt; &lt;html&gt; &lt;body&gt; This page is encrypted! Please provide password as URL hash. &lt;/body&gt; &lt;/html&gt; // secret.js document." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://hscrypt.github.io/" /><meta property="article:section" content="" />
+<meta property="article:published_time" content="2022-02-24T18:18:56+00:00" />
+<meta property="article:modified_time" content="2022-02-24T18:18:56+00:00" />
+
+<title>Index | hscrypt demos</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon.png" type="image/x-icon">
+<link rel="stylesheet" href="/book.min.82c5dbd23447cee0b4c2aa3ed08ce0961faa40e1fa370eee4f8c9f02e0d46b5f.css" integrity="sha256-gsXb0jRHzuC0wqo&#43;0Izglh&#43;qQOH6Nw7uT4yfAuDUa18=" crossorigin="anonymous">
+  <script defer src="/flexsearch.min.js"></script>
+  <script defer src="/en.search.min.eda843b1c5d3aa984b8998f3a1b711250dc318bd7b5d6b7684d40e5a062565fc.js" integrity="sha256-7ahDscXTqphLiZjzobcRJQ3DGL17XWt2hNQOWgYlZfw=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>hscrypt demos</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var a=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(b){localStorage.setItem("menu.scrollTop",a.scrollTop)}),a.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Index</strong>
+
+  <label for="toc-control">
+    
+    <img src="/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#hello-world">Hello World</a>
+      <ul>
+        <li><a href="#encrypted-landing-page">Encrypted landing page</a></li>
+        <li><a href="#decrypting-via-url-hash-password">Decrypting via URL-hash password</a></li>
+        <li><a href="#decryption-failure">Decryption failure</a></li>
+      </ul>
+    </li>
+    <li><a href="#disclaimer">Disclaimer</a></li>
+    <li><a href="#cryptography">Crypto(graphy)</a>
+      <ul>
+        <li><a href="#chacha20">ChaCha20</a></li>
+        <li><a href="#encryption">Encryption</a></li>
+        <li><a href="#decryption">Decryption</a></li>
+        <li><a href="#injection">Injection</a></li>
+        <li><a href="#key-derivation">Key Derivation</a></li>
+      </ul>
+    </li>
+    <li><a href="#credits">Credits</a>
+      <ul>
+        <li><a href="#other-inspiration">Other inspiration</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><h1 id="hscrypt-demos">
+  hscrypt demos
+  <a class="anchor" href="#hscrypt-demos">#</a>
+</h1>
+<p>Examples using <a href="https://github.com/hscrypt/js"><code>hscrypt</code></a> and <a href="https://github.com/hscrypt/webpack-plugin"><code>hscrypt-webpack-plugin</code></a> to encrypt and deploy static sites.</p>
+<p><code>hscrypt</code> simulates &ldquo;anyone with the link can view&rdquo; permissioning for publicly-hosted static web apps (e.g. on GitHub Pages). Please read <a href="#disclaimer">the Disclaimer section</a> before using.</p>
+<h2 id="hello-world">
+  Hello World
+  <a class="anchor" href="#hello-world">#</a>
+</h2>
+<p>Here&rsquo;s a simple example (taken from <a href="./00-simple">00-simple</a>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html"><span style="color:#75715e">&lt;!-- index.html --&gt;</span>
+&lt;<span style="color:#f92672">html</span>&gt;
+&lt;<span style="color:#f92672">body</span>&gt;
+This page is encrypted! Please provide password as URL hash.
+&lt;/<span style="color:#f92672">body</span>&gt;
+&lt;/<span style="color:#f92672">html</span>&gt;
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#75715e">// secret.js
+</span><span style="color:#75715e"></span>document.<span style="color:#a6e22e">body</span>.<span style="color:#a6e22e">innerHTML</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;secret message 🐿&#39;</span>  <span style="color:#75715e">// inject secret message (or an entire application!) somewhere on page
+</span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#75715e">// webpack.config.js
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">path</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#34;path&#34;</span>)
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">HTMLWebpackPlugin</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#34;html-webpack-plugin&#34;</span>);
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">HscryptPlugin</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#34;hscrypt-webpack-plugin&#34;</span>).<span style="color:#66d9ef">default</span>;
+
+<span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">exports</span> <span style="color:#f92672">=</span> {
+    <span style="color:#a6e22e">entry</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;./src/secret.js&#34;</span>,
+    <span style="color:#a6e22e">output</span><span style="color:#f92672">:</span> { <span style="color:#a6e22e">path</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">path</span>.<span style="color:#a6e22e">resolve</span>(<span style="color:#a6e22e">__dirname</span>, <span style="color:#e6db74">&#39;dist&#39;</span>), <span style="color:#a6e22e">filename</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;bundle.js&#34;</span> },
+    <span style="color:#a6e22e">plugins</span><span style="color:#f92672">:</span> [
+        <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">HTMLWebpackPlugin</span>({ <span style="color:#a6e22e">inject</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">true</span>, <span style="color:#a6e22e">template</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;index.html&#39;</span> }),
+        <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">HscryptPlugin</span>({ <span style="color:#a6e22e">path</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;dist&#34;</span>, <span style="color:#a6e22e">filename</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;bundle.js&#34;</span>, <span style="color:#a6e22e">pswd</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;my-password&#34;</span> })
+    ]
+}
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># bash</span>
+npm install webpack
+node_modules/.bin/webpack  <span style="color:#75715e"># build encrypted bundle</span>
+http-server dist           <span style="color:#75715e"># serve dist/ folder</span>
+</code></pre></div><h3 id="encrypted-landing-page">
+  Encrypted landing page
+  <a class="anchor" href="#encrypted-landing-page">#</a>
+</h3>
+<p>Then open <a href="http://127.0.0.1:8080">127.0.0.1:8080</a> (or whichever port <code>http-server</code> prints):</p>
+<p><img src="./00-simple/images/00-encrypted.png" alt="" /></p>
+<p>This is <code>index.html</code> from above.</p>
+<h3 id="decrypting-via-url-hash-password">
+  Decrypting via URL-hash password
+  <a class="anchor" href="#decrypting-via-url-hash-password">#</a>
+</h3>
+<p>If you know the password (set at build time in <code>webpack.config.js</code> above), you can decrypt the page by adding the password as a URL &ldquo;hash&rdquo;: <a href="http://127.0.0.1:8080#my-password">http://127.0.0.1:8080#my-password</a>:</p>
+<p><img src="./00-simple/images/01-decrypted.png" alt="" /></p>
+<h3 id="decryption-failure">
+  Decryption failure
+  <a class="anchor" href="#decryption-failure">#</a>
+</h3>
+<p>Incorrect password fails to decrypt, triggers an alert:</p>
+<p><img src="./00-simple/images/02-decryption-error.png" alt="" /></p>
+<h2 id="disclaimer">
+  Disclaimer
+  <a class="anchor" href="#disclaimer">#</a>
+</h2>
+<ul>
+<li>There is cryptography here and I am not a cryptographer!</li>
+<li><strong>Passwords should have ≥60 bits of entropy</strong>; see <a href="#key-derivation">&ldquo;Key Derivation&rdquo;</a>.</li>
+<li>I tried to use various crypto primitives correctly, but you should audit before trusting.</li>
+<li>I am not aware of any bugs, but to my knowledge no one else has looked at it. I make no representations that it is secure or does what it&rsquo;s supposed to.</li>
+<li>My intention is to use <code>hscrypt</code> to host private data on GitHub Pages &ldquo;soon&rdquo;, and I will update this note when I do, but I am not currently relying on it &ldquo;in production.&rdquo;
+<ul>
+<li>I also intend to publish a honeypot encrypted site and offer a bounty ($20) to anyone that can break it (and explain it to me so that I can fix it 😄). I will also update this when that&rsquo;s live.</li>
+</ul>
+</li>
+</ul>
+<h2 id="cryptography">
+  Crypto(graphy)
+  <a class="anchor" href="#cryptography">#</a>
+</h2>
+<p>Here&rsquo;s an overview of the cryptographic operations performed by hscrypt; please <a href="https://github.com/hscrypt/js/issues/new">tell me</a> if you spot any errors or think I&rsquo;m thinking about something incorrectly.</p>
+<h3 id="chacha20">
+  ChaCha20
+  <a class="anchor" href="#chacha20">#</a>
+</h3>
+<p>I found and used ChaChas20 after earlier experiments with PGP-encrypted pages (around <a href="https://gitlab.com/smondet/hscrypt">gitlab.com/smondet/hscrypt</a>), where my impression was that PGP-decryption at page load time was painfully slow.  I searched for a faster symmetric cipher, and ChaCha20 seemed to be the best choice.</p>
+<p>I ported <a href="https://github.com/thesimj/js-chacha20">thesimj/js-chacha20</a> to typescript: <a href="https://github.com/hscrypt/ts-chacha20">hscrypt/ts-chacha20</a>. I am trusting <code>js-chacha20</code>, and have not audited it.</p>
+<h3 id="encryption">
+  Encryption
+  <a class="anchor" href="#encryption">#</a>
+</h3>
+<p>The encryption path is at <a href="https://github.com/hscrypt/js/blob/main/src/encrypt.ts">hscrypt/js/src/encrypt.ts</a>. Given:</p>
+<ul>
+<li>some Javascript source (e.g. the contents of a Webpack-compiled <code>bundle.js</code>; see <a href="https://github.com/hscrypt/webpack-plugin">hscrypt/webpack-plugin</a>),</li>
+<li>a password</li>
+<li>a number of iterations for PBKDF2
+<ul>
+<li>optional, defaults to 20k, but <strong>requires very strong passwords!</strong></li>
+<li>see <a href="#pbkdf2-iterations">⚠️ PBKDF2 iterations ⚠️</a> below for caveats/discussion)</li>
+</ul>
+</li>
+</ul>
+<p><code>hscrypt.encrypt</code> will:</p>
+<ul>
+<li>generate a 32-byte salt and 12-byte nonce</li>
+<li>pass salt, iterations, and password to PBKDF2 to obtain the &ldquo;encryption key&rdquo;</li>
+<li>initialize a ChaCha20 encoder with nonce and encryption key</li>
+<li>prepend a &ldquo;magic string&rdquo; (<code>/* hscrypt */ </code>) to the JS source, encrypt it with ChaCha20 to obtain &ldquo;ciphertext&rdquo;</li>
+<li>concatenate salt, nonce, and ciphertext, return this buffer</li>
+</ul>
+<h3 id="decryption">
+  Decryption
+  <a class="anchor" href="#decryption">#</a>
+</h3>
+<p>Decryption of an encrypted script bundle happens in <a href="https://github.com/hscrypt/js/blob/main/src/hscrypt.ts"><code>hscrypt._decrypt</code></a>, and basically just inverts the encryption path.</p>
+<p>Given inputs:</p>
+<ul>
+<li><code>encrypted</code> buffer returned by <code>hscrypt.encrypt</code></li>
+<li>password</li>
+<li>iterations (for PBKDF2)</li>
+<li>optional <code>decryptionKeyHex</code>: when <code>cacheDecryptionKey</code> is enabled, the decryption path can receive this value and skip an expensive key-derivation computation</li>
+</ul>
+<p><code>hscrypt._decrypt</code> will:</p>
+<ul>
+<li>slice nonce and ciphertext from <code>encrypted</code> buffer</li>
+<li>if <code>decryptionKeyHex</code> was not provided:
+<ul>
+<li>slice salt from <code>encrypted</code> buffer</li>
+<li>pass salt, iterations, and password to PBKDF2 to obtain the &ldquo;decryption key&rdquo;</li>
+</ul>
+</li>
+<li>initialize a ChaCha20 decoder with nonce and decryption key</li>
+<li>decrypt ciphertext using the ChaCha20 decoder to obtain &ldquo;plaintext&rdquo;</li>
+<li>verify that plaintext begins with the &ldquo;magic string&rdquo; <code>/* hscrypt */ </code>, remove it to obtain original Javascript source</li>
+<li>return source as well as decryption key (the latter allowing for callers to cache it, to implement <code>cacheDecryptionKey</code>)</li>
+</ul>
+<h3 id="injection">
+  Injection
+  <a class="anchor" href="#injection">#</a>
+</h3>
+<p>&ldquo;Injection&rdquo; of an encrypted script bundle into the page happens in <a href="https://github.com/hscrypt/js/blob/main/src/hscrypt.ts"><code>hscrypt.inject</code></a> which wraps the decryption path flow:</p>
+<ul>
+<li>check for password or decryption key in 3 places (short-circuiting on first find):
+<ul>
+<li><code>pswd</code> argument to <code>hscrypt.inject</code></li>
+<li>URL hash (e.g. <a href="http://127.0.0.1:8080#my-password">http://127.0.0.1:8080#my-password</a> above; if a hash is found, it&rsquo;s immediately removed from the URL bar (⚠️ ️️but likely exists in your browser&rsquo;s history, as plaintext ⚠️)</li>
+<li>localStorage cache of decryption key (post-PBDKF2, not password; saves time on reload, when <code>cacheDecryptionKey</code> is enabled)</li>
+</ul>
+</li>
+<li>if no password or decryption key is found:
+<ul>
+<li>optionally register a <code>&quot;hashchange&quot;</code> listener
+<ul>
+<li>if the user subsequently enters a hash (manually), or navigates to a hash of the current URL, re-attempt the injection+decryption flow</li>
+</ul>
+</li>
+<li>fire a configurable callback (default: <code>console.log</code> a message explaining that no password was found)</li>
+<li>return</li>
+</ul>
+</li>
+<li>fetch the encrypted, remote source bundle (typically named e.g. <code>bundle.js.encrypted</code>)</li>
+<li>decrypt it</li>
+<li>if applicable, cache the decryption key (as a hex string) in <code>localStorage</code></li>
+<li>if any errors arose, call a configurable callback
+<ul>
+<li>by default, check if a cached decryption key was used, and if so, purge it (as evidently the encrypted bundle has changed so that the cached decryption key no longer works)</li>
+</ul>
+</li>
+</ul>
+<h3 id="key-derivation">
+  Key Derivation
+  <a class="anchor" href="#key-derivation">#</a>
+</h3>
+<p>hscrypt uses PBKDF2 (provided by <a href="https://cryptojs.gitbook.io/docs/#pbkdf2">CryptoJS</a>), with SHA512, and <a href="https://github.com/hscrypt/js/blob/main/src/utils.ts"><strong>defaults to 20k iterations</strong></a>.</p>
+<p>⚠️ 20,000 iterations of SHA512 means <strong>you should use passwords with ≥60 bits of entropy</strong> (see <a href="#password-strength">&ldquo;Password strength&rdquo;</a> below). ⚠️</p>
+<p>⚠️ hscrypt-encrypted bundles are designed to be published on the internet where anyone can download them and point password crackers at them, 24/7, indefinitely into the future. ⚠️</p>
+<p><strong>Your best defense will always be using a strong(er) password,</strong> which also doesn&rsquo;t incur key-derivation time-cost during page load.</p>
+<h4 id="pbkdf2-iterations-20k-x-sha512-a-idpbkdf2-iterationsa">
+  PBKDF2 iterations: 20k x SHA512 <!-- raw HTML omitted --><!-- raw HTML omitted -->
+  <a class="anchor" href="#pbkdf2-iterations-20k-x-sha512-a-idpbkdf2-iterationsa">#</a>
+</h4>
+<p>There is a direct tradeoff between &ldquo;page load time&rdquo; and &ldquo;page security&rdquo; embodied in the <code>iterations</code> param (passed to PBKDF2):</p>
+<ul>
+<li>hscrypt&rsquo;s default configuration (20k x SHA512) loads a page in ≈1s on my 2021 Macbook Air.</li>
+<li>I&rsquo;d like for pages to not be delayed longer than that when loading, so <strong>it is imperative that you use a strong enough password</strong> so that your page is as secure as you need it to be.</li>
+</ul>
+<h4 id="-20k-may-not-be-enough-iterations-you-should-compensate-with-strong-passwords-or-more-iterations--a-idpbkdf2-iterations-warninga">
+  ⚠️ 20k may not be enough iterations! You should compensate with strong passwords (or more iterations) ⚠️ <!-- raw HTML omitted --><!-- raw HTML omitted -->
+  <a class="anchor" href="#-20k-may-not-be-enough-iterations-you-should-compensate-with-strong-passwords-or-more-iterations--a-idpbkdf2-iterations-warninga">#</a>
+</h4>
+<ul>
+<li>
+<p><a href="https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html">OWASP recommendation: <strong>120k iterations of SHA512</strong></a>, or 310k iterations of SHA256</p>
+</li>
+<li>
+<p>1password uses 100k iterations of SHA256, cf. <a href="https://1passwordstatic.com/files/security/1password-white-paper.pdf">&ldquo;1Password Security Design&rdquo; whitepaper</a>, pg. 19:</p>
+<blockquote>
+<p>Your account password and the salt are passed to PBKDF2-HMACSHA256 with 100,000 iterations</p>
+</blockquote>
+<p>As an aside: it&rsquo;s interesting that 1Password is 3x lower than the OWASP recommendation; I interpret them both as targeting a level of security that is beyond what the average hscrypt site requires.</p>
+</li>
+</ul>
+<p>Another way to think about it is: for a given level of security, each extra bit of entropy allows for halving the iterations (and therefore key-derivation time)! A very strong password (e.g. a 20-byte Git SHA from a private repository using <a href="https://github.com/hscrypt/webpack-plugin">hscrypt/webpack-plugin</a>) in principle would allow reducing the iterations to 0, and still be as secure as a 145-entropy-bit password (160 - log₂(20,000)).</p>
+<h4 id="password-strength-hashrate-a-idpassword-strengtha">
+  Password strength, $/hashrate <!-- raw HTML omitted --><!-- raw HTML omitted -->
+  <a class="anchor" href="#password-strength-hashrate-a-idpassword-strengtha">#</a>
+</h4>
+<p>Here is some envelope-math about how much it <em>may</em> cost to crack passwords of various strengths, given PBKDF2 with 20,000 rounds of SHA512, and an attacker with a hashes-per-dollar ratio equal to that implied by the Bitcoin network:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">Entropy bits</th>
+<th style="text-align:right">Cost to crack*</th>
+<th style="text-align:right">Hex chars</th>
+<th style="text-align:right">Base64 chars</th>
+<th style="text-align:right">Diceware words</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">40</td>
+<td style="text-align:right">$0.01</td>
+<td style="text-align:right">10</td>
+<td style="text-align:right">6.7</td>
+<td style="text-align:right">3.1</td>
+</tr>
+<tr>
+<td style="text-align:right">45</td>
+<td style="text-align:right">$1.74</td>
+<td style="text-align:right">11.25</td>
+<td style="text-align:right">7.5</td>
+<td style="text-align:right">3.5</td>
+</tr>
+<tr>
+<td style="text-align:right">50</td>
+<td style="text-align:right">$257</td>
+<td style="text-align:right">12.5</td>
+<td style="text-align:right">8.3</td>
+<td style="text-align:right">3.9</td>
+</tr>
+<tr>
+<td style="text-align:right">55</td>
+<td style="text-align:right">$38250</td>
+<td style="text-align:right">13.75</td>
+<td style="text-align:right">9.2</td>
+<td style="text-align:right">4.3</td>
+</tr>
+<tr>
+<td style="text-align:right">60</td>
+<td style="text-align:right">$5.7MM</td>
+<td style="text-align:right">15</td>
+<td style="text-align:right">10</td>
+<td style="text-align:right">4.6</td>
+</tr>
+<tr>
+<td style="text-align:right">65</td>
+<td style="text-align:right">$842MM</td>
+<td style="text-align:right">16.25</td>
+<td style="text-align:right">10.8</td>
+<td style="text-align:right">5</td>
+</tr>
+<tr>
+<td style="text-align:right">70</td>
+<td style="text-align:right">$125BN</td>
+<td style="text-align:right">17.5</td>
+<td style="text-align:right">11.7</td>
+<td style="text-align:right">5.4</td>
+</tr>
+<tr>
+<td style="text-align:right">75</td>
+<td style="text-align:right">$18,557BN</td>
+<td style="text-align:right">18.75</td>
+<td style="text-align:right">12.5</td>
+<td style="text-align:right">5.8</td>
+</tr>
+<tr>
+<td style="text-align:right">80</td>
+<td style="text-align:right">$2,754,191BN</td>
+<td style="text-align:right">20</td>
+<td style="text-align:right">13.3</td>
+<td style="text-align:right">6.2</td>
+</tr>
+</tbody>
+</table>
+<p>* Assumptions/Notes:</p>
+<ul>
+<li>Password hashed with PBKDF2, using 20,000 iterations of SHA512</li>
+<li>Hashes/$ implied by current <a href="https://www.blockchain.com/charts/hash-rate">BTC hash rate</a>:
+<ul>
+<li>Hash rate (≈2e20H/s) / block reward (6.25BTC/10mins x $40k/BTC ⟹ ≈$400/s) ⟹ ≈5e17 hashes/$</li>
+<li>log₂([≈5e17 hashes/$] / [20,000 PBKDF2 iterations]) ≈ 44.5 bits of entropy ≈ $1</li>
+</ul>
+</li>
+</ul>
+<p>Conservative assumptions (I hope):</p>
+<ul>
+<li>$/SHA256 = $/SHA512: in reality, SHA512 is supposed to be &ldquo;harder&rdquo; than SHA256. I&rsquo;m assuming it is at least as hard.</li>
+<li>Assumes attacker $/H equivalent to what BTC miners get with SHA256. Most real-world attackers of hscrypt bundles will presumably pay more per hash.</li>
+</ul>
+<p>Again, <a href="#disclaimer">I am not an expert</a> and no one has vetted any part of this analysis or the hscrypt implementation!</p>
+<h2 id="credits">
+  Credits
+  <a class="anchor" href="#credits">#</a>
+</h2>
+<ul>
+<li>Ben Newman (<a href="https://github.com/benjamn"><strong>@benjamn</strong></a>) (lots of JS/TS/WP/ESM/CJS help)</li>
+<li>Seb Mondet (<a href="https://github.com/smondet"><strong>@smondet</strong></a>) (wrote <a href="https://gitlab.com/smondet/hscrypt">gitlab.com/smondet/hscrypt</a>, showed/explained it to me)</li>
+<li>Mykola Bubelich <a href="https://github.com/thesimj"><strong>@thesimj</strong></a> (author of <a href="https://github.com/thesimj/js-chacha20">thesimj/js-chacha20</a>)</li>
+</ul>
+<h3 id="other-inspiration">
+  Other inspiration
+  <a class="anchor" href="#other-inspiration">#</a>
+</h3>
+<p><a href="https://github.com/robinmoisson/staticrypt">robinmoisson/staticrypt</a>: a very similar, apparently popular tool! <a href="https://robinmoisson.github.io/staticrypt/">Demo</a>. I noticed it after I&rsquo;d already done a fair amount of work on hscrypt, and thought I wanted some features or a different design that motivated continuing to write my own version of it anyway, e.g. password in URL hash, webpack integration, decryption-key caching (recently added in <a href="https://github.com/robinmoisson/staticrypt/pull/124">staticrypt#124</a>!) and other deployment / configuration things I still haven&rsquo;t gotten around to implementing. It may be that I&rsquo;d have an easier time adding features to staticrypt. I need to do more diligence.</p>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+  <script>(function(){function a(c){const a=window.getSelection(),b=document.createRange();b.selectNodeContents(c),a.removeAllRanges(),a.addRange(b)}document.querySelectorAll("pre code").forEach(b=>{b.addEventListener("click",function(c){a(b.parentElement),navigator.clipboard&&navigator.clipboard.writeText(b.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#hello-world">Hello World</a>
+      <ul>
+        <li><a href="#encrypted-landing-page">Encrypted landing page</a></li>
+        <li><a href="#decrypting-via-url-hash-password">Decrypting via URL-hash password</a></li>
+        <li><a href="#decryption-failure">Decryption failure</a></li>
+      </ul>
+    </li>
+    <li><a href="#disclaimer">Disclaimer</a></li>
+    <li><a href="#cryptography">Crypto(graphy)</a>
+      <ul>
+        <li><a href="#chacha20">ChaCha20</a></li>
+        <li><a href="#encryption">Encryption</a></li>
+        <li><a href="#decryption">Decryption</a></li>
+        <li><a href="#injection">Injection</a></li>
+        <li><a href="#key-derivation">Key Derivation</a></li>
+      </ul>
+    </li>
+    <li><a href="#credits">Credits</a>
+      <ul>
+        <li><a href="#other-inspiration">Other inspiration</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
