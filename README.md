@@ -44,7 +44,7 @@ http-server dist           # serve dist/ folder
 ```
 
 ### Encrypted landing page
-Then open http://127.0.0.1:8080 (or whichever port `http-server` prints):
+Then open [127.0.0.1:8080](http://127.0.0.1:8080) (or whichever port `http-server` prints):
 
 ![](./00-simple/images/00-encrypted.png)
 
