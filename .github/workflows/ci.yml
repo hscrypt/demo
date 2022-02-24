@@ -12,9 +12,21 @@ jobs:
     - uses: actions/setup-node@v2
       with:
         node-version: '17'
-        cache: 'npm'
-    - run: npm install
-    - run: npm run dev
+    - name: Build 00-simple
+      working-directory: 00-simple
+      run: |
+        npm install
+        node_modules/.bin/webpack
+    - name: Build 01-api
+      working-directory: 01-api
+      run: |
+        npm install
+        npm run dev
+    - name: Copy demos into dist/
+      run: |
+        mkdir dist/
+        cp -r 00-simple/dist dist/00-simple
+        cp -r 01-api/dist dist/01-api
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       with:
